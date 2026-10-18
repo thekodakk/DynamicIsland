@@ -1,0 +1,220 @@
+<Window x:Class="DynamikIsland.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="DynamikIsland"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Topmost="True"
+        ShowInTaskbar="False"
+        ResizeMode="NoResize"
+        Width="460"
+        Height="160"
+        d:Width="460" d:Height="160">
+
+    <Window.Resources>
+        <Storyboard x:Key="ExpandSB">
+            <DoubleAnimation Storyboard.TargetName="IslandBorder"
+                             Storyboard.TargetProperty="Width"
+                             To="460" Duration="0:0:0.35">
+                <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="IslandBorder"
+                             Storyboard.TargetProperty="Height"
+                             To="150" Duration="0:0:0.35">
+                <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="CompactContent"
+                             Storyboard.TargetProperty="Opacity"
+                             To="0" Duration="0:0:0.08"/>
+            <DoubleAnimation Storyboard.TargetName="ExpandedContent"
+                             Storyboard.TargetProperty="Opacity"
+                             To="1" Duration="0:0:0.25" BeginTime="0:0:0.12">
+                <DoubleAnimation.EasingFunction><QuadraticEase EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+
+        <Storyboard x:Key="CollapseSB">
+            <DoubleAnimation Storyboard.TargetName="ExpandedContent"
+                             Storyboard.TargetProperty="Opacity"
+                             To="0" Duration="0:0:0.10">
+                <DoubleAnimation.EasingFunction><QuadraticEase EasingMode="EaseIn"/></DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="IslandBorder"
+                             Storyboard.TargetProperty="Width"
+                             To="360" Duration="0:0:0.32" BeginTime="0:0:0.06">
+                <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="IslandBorder"
+                             Storyboard.TargetProperty="Height"
+                             To="38" Duration="0:0:0.32" BeginTime="0:0:0.06">
+                <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseInOut"/></DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+            <DoubleAnimation Storyboard.TargetName="CompactContent"
+                             Storyboard.TargetProperty="Opacity"
+                             To="1" Duration="0:0:0.15" BeginTime="0:0:0.22"/>
+        </Storyboard>
+    </Window.Resources>
+
+    <Grid Background="Transparent">
+        <!-- SINGLE MAIN ISLAND BORDER CONTAINER -->
+        <Border x:Name="IslandBorder"
+                Width="360" Height="38"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                CornerRadius="0,0,24,24"
+                ClipToBounds="True"
+                UseLayoutRounding="True"
+                MouseEnter="OnMouseEnter"
+                MouseLeave="OnMouseLeave"
+                PreviewMouseWheel="Island_PreviewMouseWheel">
+
+            <Border.Background>
+                <SolidColorBrush Color="#0D0D12" Opacity="0.96"/>
+            </Border.Background>
+
+            <Border.BorderBrush>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#50FFFFFF" Offset="0"/>
+                    <GradientStop Color="#15FFFFFF" Offset="0.5"/>
+                    <GradientStop Color="#30FFFFFF" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.BorderBrush>
+            <Border.BorderThickness>1,0,1,1</Border.BorderThickness>
+
+            <Grid Margin="12,4,12,6">
+                <!-- TOP GLOW ACCENT BAR -->
+                <Border Height="1.5" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="-12,0,-12,0" Panel.ZIndex="10">
+                    <Border.Background>
+                        <LinearGradientBrush x:Name="GlowBrush" StartPoint="0,0" EndPoint="1,0">
+                            <GradientStop Color="#009333EA" Offset="0.0"/>
+                            <GradientStop Color="#ACC084FC" Offset="0.5"/>
+                            <GradientStop Color="#00EC4899" Offset="1.0"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                </Border>
+
+                <!-- COMPACT VIEW LAYER -->
+                <Grid x:Name="CompactContent" VerticalAlignment="Center" Opacity="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- INTEGRATED SLOT / ROZET BADGE AREA -->
+                    <Border Grid.Column="0"
+                            x:Name="SlotBadge"
+                            CornerRadius="10"
+                            Padding="7,2,8,2"
+                            Margin="0,0,8,0"
+                            VerticalAlignment="Center">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#309333EA" Offset="0"/>
+                                <GradientStop Color="#20EC4899" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock x:Name="SlotIcon" Text="⚡" FontSize="11" Foreground="#C084FC" Margin="0,0,4,0"/>
+                            <TextBlock x:Name="SlotTag" Text="Sistem" FontSize="10" FontWeight="Bold" Foreground="#E2E8F0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- COMPACT QUICK STATS SUMMARY -->
+                    <TextBlock Grid.Column="1"
+                               x:Name="CompactSummaryText"
+                               Text="CPU %18 · RAM %56"
+                               Foreground="#A0AEC0"
+                               FontSize="11"
+                               FontFamily="Segoe UI"
+                               VerticalAlignment="Center"
+                               TextTrimming="CharacterEllipsis"/>
+
+                    <TextBlock Grid.Column="2"
+                               x:Name="CompactRightText"
+                               Text="↓ 4.2 MB/s"
+                               Foreground="#38BDF8"
+                               FontSize="11"
+                               FontWeight="SemiBold"
+                               VerticalAlignment="Center"/>
+                </Grid>
+
+                <!-- EXPANDED VIEW LAYER -->
+                <Grid x:Name="ExpandedContent" Opacity="0" VerticalAlignment="Stretch">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- EXPANDED HEADER WITH INTEGRATED SLOT -->
+                    <Grid Grid.Row="0" Margin="0,2,0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0"
+                                CornerRadius="10"
+                                Padding="8,3,10,3"
+                                VerticalAlignment="Center">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#409333EA" Offset="0"/>
+                                    <GradientStop Color="#25EC4899" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock x:Name="ExpandedSlotIcon" Text="⚡" FontSize="12" Foreground="#C084FC" Margin="0,0,5,0"/>
+                                <TextBlock x:Name="ExpandedSlotTitle" Text="SİSTEM ÖZETİ" FontSize="11" FontWeight="Bold" Foreground="#F1F5F9"/>
+                            </StackPanel>
+                        </Border>
+
+                        <TextBlock Grid.Column="1"
+                                   Text="Dynamic Island Monitor"
+                                   Foreground="#64748B"
+                                   FontSize="10"
+                                   HorizontalAlignment="Right"
+                                   VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <!-- PAGE CONTENT CONTAINER -->
+                    <Grid Grid.Row="1" Margin="2,0,2,4">
+                        <!-- PAGE 0: SISTEM ÖZETI -->
+                        <StackPanel x:Name="Page0Content" Visibility="Visible">
+                            <TextBlock x:Name="P0_CpuText" Text="CPU Yükü: %24.5" Foreground="#F1F5F9" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                            <TextBlock x:Name="P0_RamText" Text="RAM: 18.0 / 31.9 GB (%56.5)" Foreground="#CBD5E1" FontSize="11" Margin="0,0,0,4"/>
+                            <TextBlock x:Name="P0_ProcText" Text="En Çok Tüketen: chrome.exe (%14.2 CPU)" Foreground="#94A3B8" FontSize="11" FontStyle="Italic"/>
+                        </StackPanel>
+
+                        <!-- PAGE 1: AĞ VE İNTERNET -->
+                        <StackPanel x:Name="Page1Content" Visibility="Collapsed">
+                            <TextBlock x:Name="P1_SpeedText" Text="İndirme: ↓ 4.20 MB/s  |  Yükleme: ↑ 512 KB/s" Foreground="#F1F5F9" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                            <TextBlock x:Name="P1_TotalText" Text="Toplam Veri Trafiği: 36.98 GB" Foreground="#CBD5E1" FontSize="11" Margin="0,0,0,4"/>
+                            <TextBlock Text="Bağlantı: Aktif (Ethernet / Wi-Fi)" Foreground="#94A3B8" FontSize="11" FontStyle="Italic"/>
+                        </StackPanel>
+
+                        <!-- PAGE 2: DİSK & SİSTEM -->
+                        <StackPanel x:Name="Page2Content" Visibility="Collapsed">
+                            <TextBlock x:Name="P2_DiskText" Text="C: Boş Alan: 316.8 GB / 930.6 GB (%34.0 Boş)" Foreground="#F1F5F9" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                            <TextBlock x:Name="P2_UptimeText" Text="Sistem Açık Kalma Süresi: 6 Gün 1 Saat 49 Dk" Foreground="#CBD5E1" FontSize="11" Margin="0,0,0,4"/>
+                            <TextBlock x:Name="P2_PowerText" Text="Güç Durumu: Masaüstü (Kesintisiz Güç)" Foreground="#94A3B8" FontSize="11" FontStyle="Italic"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- DOT INDICATORS (• o o) -->
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,2,0,0">
+                        <TextBlock x:Name="Dot0" Text="●" Foreground="#C084FC" FontSize="10" Margin="4,0" Cursor="Hand" MouseLeftButtonDown="Dot0_Click"/>
+                        <TextBlock x:Name="Dot1" Text="○" Foreground="#50FFFFFF" FontSize="10" Margin="4,0" Cursor="Hand" MouseLeftButtonDown="Dot1_Click"/>
+                        <TextBlock x:Name="Dot2" Text="○" Foreground="#50FFFFFF" FontSize="10" Margin="4,0" Cursor="Hand" MouseLeftButtonDown="Dot2_Click"/>
+                    </StackPanel>
+                </Grid>
+
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
